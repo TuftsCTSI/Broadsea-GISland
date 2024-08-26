@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+
+  gaia-catalog:
+    container_name: gaia-catalog
+    platform: ${DOCKER_ARCH}
+    restart: unless-stopped
+    links:
+      - "gaia-solr:index"
+    entrypoint: ["nohup","python","ohdsi.py","&"]

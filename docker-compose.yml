@@ -1,5 +1,3 @@
-version: '3.9'
-
 volumes:
   atlasdb-postgres-data:
     name: atlasdb-postgres-data
@@ -23,6 +21,10 @@ volumes:
     name: jupyter-notebook
   pgadmin-data:
     name: pgadmin-data
+  gaia-solr:
+    name: gaia-solr
+  gaia-catalog:
+    name: gaia-catalog
 
 services:
   
@@ -37,8 +39,8 @@ services:
     labels:
      - "traefik.enable=true"
     ports:
-      - "80:80"
-      - "443:443"
+      - "8080:80"
+      - "8443:443"
     volumes:
       - ./traefik/traefik_${HTTP_TYPE}.yml:/etc/traefik/traefik.yml:ro
       - ./traefik/tls_${HTTP_TYPE}.yml:/etc/traefik/dynamic/tls.yml:ro
@@ -634,6 +636,30 @@ services:
       - pgadmin-data:/var/lib/pgadmin
     labels:
       - "traefik.enable=true"
+
+  
+  ### Gaia
+
+  gaia-catalog:
+    profiles: [ "gaia-catalog" ]
+    build: 
+      context: ${GAIA_CATALOG_GITHUB_URL}
+    container_name: gaia-catalog
+    ports:
+      - "5000:5000"
+    extends: 
+      file: "./compose/gaia-catalog.yml"
+      service: gaia-catalog
+
+  gaia-solr:
+    profiles: [ "gaia-catalog" ]
+    container_name: gaia-solr
+    image: solr
+    ports:
+      - "8983:8983"
+    volumes:
+      - gaia-catalog:/collections
+      - gaia-solr:/var/solr
 
 
 secrets:

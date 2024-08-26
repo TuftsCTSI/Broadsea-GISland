@@ -172,10 +172,11 @@ We also offer profiles for Perseus and other useful services, but please note, *
 | perseus-dqd             | <ul><li>Deploys the DataQualityDashboard instance for Perseus</li></ul> |
 | perseus-swagger         | <ul><li>Deploys the Swagger instance for Perseus</li></ul> |
 | perseus-white-rabbit    | <ul><li>Deploys the White Rabbit instance for Perseus</li></ul> |
-| open-shiny-server    | <ul><li>An open source version of Shiny Server, where you can drop shiny apps into a mounted folder.</li><li>Recommended if your organization does not have a Posit Connect license.</li></ul> |
-| posit-connect        | <ul><li>For sites with commercial Posit Connect licenses
-| pgadmin4                | <ul><li>Deploys the pgAdmin4 web application with a single admin user.</li></ul>
-| jupyter-notebook        | <ul><li>Deploys a simple Jupyter Data Science Notebook with no authentication.</li></ul>
+| open-shiny-server       | <ul><li>An open source version of Shiny Server, where you can drop shiny apps into a mounted folder.</li><li>Recommended if your organization does not have a Posit Connect license.</li></ul> |
+| posit-connect           | <ul><li>For sites with commercial Posit Connect licenses |
+| pgadmin4                | <ul><li>Deploys the pgAdmin4 web application with a single admin user.</li></ul> |
+| jupyter-notebook        | <ul><li>Deploys a simple Jupyter Data Science Notebook with no authentication.</li></ul> |
+| gaia-catalog            | <ul><li>Deploys a searchable catalog to identify geospatial data layers for ETL and use in GAIA core</li></ul> |
 
 ### Traefik Dashboard
 
