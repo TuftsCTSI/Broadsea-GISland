@@ -25,6 +25,8 @@ volumes:
     name: gaia-solr
   gaia-catalog:
     name: gaia-catalog
+  gaia-db:
+    name: gaia-db
 
 services:
   
@@ -640,8 +642,44 @@ services:
   
   ### Gaia
 
+  gaia-core:
+    profiles: [ "gaia-core" ]
+    image: gaia-core
+    build: # this could also be the OHDSI/GIS repo
+      context: ./
+      dockerfile: ./gaia/gaia-core/Dockerfile
+    container_name: gaia-core
+    secrets:
+      - GAIA_PG_PASSWORD
+    environment:
+      POSTGRES_USER: ${GAIA_PG_USER}
+      POSTGRES_DB: ${GAIA_PG_DB}
+      POSTGRES_PASSWORD_FILE: /run/secrets/GAIA_PG_PASSWORD
+      POSTGRES_PORT: 5432
+      GAIA_CORE_API_PORT: ${GAIA_CORE_API_PORT}
+
+  gaia-db:
+    profiles: [ "gaia-core" ]
+    image: gaia-db
+    build: # this could also be the OHDSI/GIS repo
+      context: ./
+      dockerfile: ./gaia/gaia-db/Dockerfile
+    container_name: gaia-db
+    secrets:
+      - GAIA_PG_PASSWORD
+    environment:
+      POSTGRES_USER: ${GAIA_PG_USER}
+      POSTGRES_DB: ${GAIA_PG_DB}
+      POSTGRES_PASSWORD_FILE: /run/secrets/GAIA_PG_PASSWORD
+      POSTGRES_PORT: 5432
+    ports:
+    - "${GAIA_PG_LOCALHOST_PORT}:5432"
+    volumes:
+      - gaia-db:/var/lib/postgresql/data
+
   gaia-catalog:
-    profiles: [ "gaia-catalog" ]
+    profiles: [ "gaia-catalog", "gaia-core" ]
+    image: gaia-catalog
     build: 
       context: ${GAIA_CATALOG_GITHUB_URL}
     container_name: gaia-catalog
@@ -652,7 +690,7 @@ services:
       service: gaia-catalog
 
   gaia-solr:
-    profiles: [ "gaia-catalog" ]
+    profiles: [ "gaia-catalog", "gaia-core" ]
     container_name: gaia-solr
     image: solr
     ports:
@@ -703,6 +741,8 @@ secrets:
     file: ${WEBAPI_CDM_SNOWFLAKE_PRIVATE_KEY_FILE}
   PGADMIN_DEFAULT_PASSWORD:
     file: ${PGADMIN_DEFAULT_PASSWORD_FILE}
+  GAIA_PG_PASSWORD:
+    file: ${GAIA_PG_PASSWORD_FILE}
 
 
   
