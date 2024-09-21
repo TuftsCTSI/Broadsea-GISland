@@ -2,10 +2,10 @@
 
 A first attempt to put the OHDSI GIS working group Gaia assemblage all together in Broadsea. This builds on Jared's initial containerization implementation on the ['containerize' branch](https://github.com/TuftsCTSI/GIS/tree/containerize) of https://github.com/TuftsCTSI/GIS/.  
 
-At to level of the Broadsea-GISland repository run:
+At to level of the Broadsea-GISland repository run:  
 `$ docker compose --profile gaia-core up -d`
 
-If the gaia-core image fails to build with docker compose, then build it from docker and rerun the above command:
+If the gaia-core image fails to build with docker compose, then build it from docker and rerun the above command:  
 `$ docker build -t gaia-core -f gaia/gaia-core/Dockerfile .`
 
 Notes:
