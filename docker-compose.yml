@@ -646,8 +646,8 @@ services:
     profiles: [ "gaia-core" ]
     image: gaia-core
     build: # this could also be the OHDSI/GIS repo
-      context: ./
-      dockerfile: ./gaia/gaia-core/Dockerfile
+      context: ${GAIA_GITHUB_URL}
+      dockerfile: ./docker/gaia-core/Dockerfile
     container_name: gaia-core
     secrets:
       - GAIA_PG_PASSWORD
@@ -657,13 +657,16 @@ services:
       POSTGRES_PASSWORD_FILE: /run/secrets/GAIA_PG_PASSWORD
       POSTGRES_PORT: 5432
       GAIA_CORE_API_PORT: ${GAIA_CORE_API_PORT}
+      DATABASECONNECTOR_JAR_FOLDER:  /jdbc
+    volumes:
+      - ./jdbc:/jdbc
 
   gaia-db:
     profiles: [ "gaia-core" ]
     image: gaia-db
     build: # this could also be the OHDSI/GIS repo
-      context: ./
-      dockerfile: ./gaia/gaia-db/Dockerfile
+      context: ${GAIA_GITHUB_URL}
+      dockerfile: ./docker/gaia-db/Dockerfile
     container_name: gaia-db
     secrets:
       - GAIA_PG_PASSWORD
