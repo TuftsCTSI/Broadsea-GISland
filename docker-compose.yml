@@ -27,6 +27,8 @@ volumes:
     name: gaia-catalog
   gaia-db:
     name: gaia-db
+  gaia-degauss:
+    name: gaia-degauss
 
 services:
   
@@ -645,7 +647,7 @@ services:
   gaia-core:
     profiles: [ "gaia-core" ]
     image: gaia-core
-    build: # this could also be the OHDSI/GIS repo
+    build:
       context: ${GAIA_GITHUB_URL}
       dockerfile: ./docker/gaia-core/Dockerfile
     container_name: gaia-core
@@ -664,7 +666,7 @@ services:
   gaia-db:
     profiles: [ "gaia-core" ]
     image: gaia-db
-    build: # this could also be the OHDSI/GIS repo
+    build:
       context: ${GAIA_GITHUB_URL}
       dockerfile: ./docker/gaia-db/Dockerfile
     container_name: gaia-db
@@ -702,6 +704,14 @@ services:
       - gaia-catalog:/collections
       - gaia-solr:/var/solr
 
+  gaia-degauss:
+    profiles: [ "gaia-catalog", "gaia-core" ]
+    container_name: gaia-degauss
+    image: ghcr.io/degauss-org/geocoder
+    entrypoint: ['tail']
+    command: ['-F','/dev/null']
+    volumes:
+      - gaia-degauss:/data
 
 secrets:
   GITHUB_PAT:
