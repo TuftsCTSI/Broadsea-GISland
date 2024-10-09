@@ -8,5 +8,5 @@ services:
     restart: unless-stopped
     links:
       - "gaia-solr:index"
-    #entrypoint: ["sleep","infinity"]  
-    entrypoint: ["nohup","python","ohdsi.py","&"]
+    entrypoint: ["sleep","infinity"]  
+    #entrypoint: ["nohup","python","ohdsi.py","&"]

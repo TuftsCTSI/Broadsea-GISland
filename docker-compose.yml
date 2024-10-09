@@ -704,7 +704,7 @@ services:
       - "8983:8983"
     volumes:
       - gaia-catalog:/gaia
-      - gaia-solr:/var/solr/data
+      - gaia-solr:/var/solr
 
   gaia-degauss:
     profiles: [ "gaia-catalog", "gaia-core" ]
