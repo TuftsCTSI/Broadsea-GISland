@@ -697,12 +697,14 @@ services:
   gaia-solr:
     profiles: [ "gaia-catalog", "gaia-core" ]
     container_name: gaia-solr
-    image: solr
+    build: 
+      context: ${GAIA_SOLR_GITHUB_URL}
+    image: gaia-solr
     ports:
       - "8983:8983"
     volumes:
-      - gaia-catalog:/collections
-      - gaia-solr:/var/solr
+      - gaia-catalog:/gaia
+      - gaia-solr:/var/solr/data
 
   gaia-degauss:
     profiles: [ "gaia-catalog", "gaia-core" ]
