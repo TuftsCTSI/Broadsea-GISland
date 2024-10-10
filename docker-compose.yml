@@ -644,7 +644,7 @@ services:
   
   ### Gaia
 
-  gaia-core:
+  gaia-core: # built from hades image
     profiles: [ "gaia-core" ]
     image: gaia-core
     build:
@@ -653,15 +653,22 @@ services:
     container_name: gaia-core
     secrets:
       - GAIA_PG_PASSWORD
+      - HADES_PASSWORD
     environment:
+      USER: ${HADES_USER}
       POSTGRES_USER: ${GAIA_PG_USER}
       POSTGRES_DB: ${GAIA_PG_DB}
       POSTGRES_PASSWORD_FILE: /run/secrets/GAIA_PG_PASSWORD
       POSTGRES_PORT: 5432
       GAIA_CORE_API_PORT: ${GAIA_CORE_API_PORT}
-      DATABASECONNECTOR_JAR_FOLDER:  /jdbc
+    ports:
+      - "8787:8787"
     volumes:
-      - ./jdbc:/jdbc
+      - rstudio-home-data:/home
+      - rstudio-tmp-data:/tmp
+      - ./hades/00_set_secrets:/etc/cont-init.d/00_set_secrets
+    labels:
+      - "traefik.enable=true"
 
   gaia-db:
     profiles: [ "gaia-core" ]
@@ -688,11 +695,12 @@ services:
     build: 
       context: ${GAIA_CATALOG_GITHUB_URL}
     container_name: gaia-catalog
+    restart: unless-stopped
     ports:
       - "5000:5000"
-    extends: 
-      file: "./compose/gaia-catalog.yml"
-      service: gaia-catalog
+    depends_on:
+      - gaia-solr
+    entrypoint: ["python","ohdsi.py"]
 
   gaia-solr:
     profiles: [ "gaia-catalog", "gaia-core" ]
