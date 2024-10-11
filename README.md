@@ -176,7 +176,8 @@ We also offer profiles for Perseus and other useful services, but please note, *
 | posit-connect           | <ul><li>For sites with commercial Posit Connect licenses |
 | pgadmin4                | <ul><li>Deploys the pgAdmin4 web application with a single admin user.</li></ul> |
 | jupyter-notebook        | <ul><li>Deploys a simple Jupyter Data Science Notebook with no authentication.</li></ul> |
-| gaia-catalog            | <ul><li>Deploys a searchable catalog to identify geospatial data layers for ETL and use in GAIA core</li></ul> |
+| gaia-catalog            | <ul><li>Deploys GAIA core with a searchable catalog to identify geospatial data layers for ETL and use</li></ul> |
+| gaia-degauss            | <ul><li>Deploys the degauss geocoder with an API available for programmatic usage</li></ul> |
 
 ### Traefik Dashboard
 
@@ -311,6 +312,38 @@ The Broadsea Methods container RStudio /usr/lib/R/site-library originally contai
 #### Jupyter Data Science Notebook (Experimental)
 
 New to Broadsea, there's now a profile for launching a simple, single user instance of Jupyter Data Science Notebook.
+
+### GAIA geospatial plugin
+
+The [OHDSI/GIS](https://ohdsi.github.io/GIS/index.html) working group is developing an OHDSI plugin to enable ETL of geographic data for analyzing both social and environmental determinants of health outcomes.
+
+#### GAIA core
+
+New to Broadsea, this profile launches a suite of tools to ETL and make available geographic data that is searchable through a catalog. Once the data is loaded it is available to HADES through the exposure_occurrence table.
+
+NOTE: most of the container is the suite build from github, the build time can be lengthy (especially gaia-core).
+
+For configuration see section 19 of the .env file. By default the following services are available:
+
+  - http://localhost:5000 - the catalog.
+    - Select the OHDSI/GIS Collection and explore a little
+    - Explore the variable level metadata on the landing pages in the OHDSI/GIS collection
+    - Once you are in a landing page for one of the SVI layers, if you click a red dot next to a variable, it will load that variable into the database using the OHDSI/GIS toolchain (this can take time as it includes the full ETL process starting from download to re-projection, transformation, and load into database)
+  - http://localhost:8787 - HADES RStudio with the gaia package installed (see section 8 of the .env for credentials)
+  - http://localhost:8983 - SOLR (for those really interested in metadata, indexing, and search these next two urls give the csv for Doug's notebooks)
+    - csv of OHDSI/GIS collection: 
+      http://localhost:8983/solr/dcat/select?indent=true&q.op=OR&q=gdsc_collections%3AOHDSI%2FGIS&useParams=&wt=csv
+    - csv of entire set of collections
+      http://localhost:8983/solr/dcat/select?indent=true&q.op=OR&q=*%3A*&rows=113&useParams=&wt=csv
+  - with PGAdmin, set host to localhost, port to 5433, user to postgres, and pass to SuperSecret and you can explore the database
+
+#### Degauss
+
+New to Broadsea, this profile launches a degauss geocoding instance with a simple API that can be called through http.
+
+http://localhost:5150/geocode?address=URLencodedAddress
+
+NOTE: this builds from github and is a very long build ...
 
 ### Evidence Dissemination
 

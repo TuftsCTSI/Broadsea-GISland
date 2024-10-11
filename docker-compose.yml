@@ -27,8 +27,6 @@ volumes:
     name: gaia-catalog
   gaia-db:
     name: gaia-db
-  gaia-degauss:
-    name: gaia-degauss
 
 services:
   
@@ -690,20 +688,20 @@ services:
       - gaia-db:/var/lib/postgresql/data
 
   gaia-catalog:
-    profiles: [ "gaia-catalog", "gaia-core" ]
+    profiles: [ "gaia-core" ]
     image: gaia-catalog
     build: 
       context: ${GAIA_CATALOG_GITHUB_URL}
     container_name: gaia-catalog
     restart: unless-stopped
     ports:
-      - "5000:5000"
+      - "${GAIA_CATALOG_API_PORT}:${GAIA_CATALOG_API_PORT}"
     depends_on:
       - gaia-solr
     entrypoint: ["python","ohdsi.py"]
 
   gaia-solr:
-    profiles: [ "gaia-catalog", "gaia-core" ]
+    profiles: [ "gaia-core" ]
     container_name: gaia-solr
     build: 
       context: ${GAIA_SOLR_GITHUB_URL}
@@ -715,13 +713,18 @@ services:
       - gaia-solr:/var/solr
 
   gaia-degauss:
-    profiles: [ "gaia-catalog", "gaia-core" ]
+    profiles: [ "gaia-degauss" ]
     container_name: gaia-degauss
-    image: ghcr.io/degauss-org/geocoder
-    entrypoint: ['tail']
-    command: ['-F','/dev/null']
-    volumes:
-      - gaia-degauss:/data
+    build:
+      context: ${GAIA_DEGAUSS_GITHUB_URL}
+    image: gaia-degauss
+    #entrypoint: ["bash", "-c", "sleep 9999"]
+    entrypoint: ["Rscript","degauss.R"]
+    command: []
+    environment:
+      GAIA_DEGAUSS_API_PORT: ${GAIA_DEGAUSS_API_PORT}
+    ports:
+      - "${GAIA_DEGAUSS_API_PORT}:${GAIA_DEGAUSS_API_PORT}"
 
 secrets:
   GITHUB_PAT:
