@@ -332,9 +332,9 @@ For configuration see section 19 of the .env file. By default the following serv
   - http://localhost:8787 - HADES RStudio with the gaia package installed (see section 8 of the .env for credentials)
   - http://localhost:8983 - SOLR (for those really interested in metadata, indexing, and search these next two urls give the csv for Doug's notebooks)
     - csv of OHDSI/GIS collection: 
-      http://localhost:8983/solr/dcat/select?indent=true&q.op=OR&q=gdsc_collections%3AOHDSI%2FGIS&useParams=&wt=csv
+      http://localhost:8983/solr/dcat/select?indent=true&q.op=OR&q=gdsc_collections%3AOHDSI%2FGIS&useParams=&csv.mv.separator=|&wt=csv
     - csv of entire set of collections
-      http://localhost:8983/solr/dcat/select?indent=true&q.op=OR&q=*%3A*&rows=113&useParams=&wt=csv
+      http://localhost:8983/solr/dcat/select?indent=true&q.op=OR&q=*%3A*&rows=113&useParams=&csv.mv.separator=|&wt=csv
   - with PGAdmin, set host to localhost, port to 5433, user to postgres, and pass to SuperSecret and you can explore the database
 
 #### Degauss
@@ -343,7 +343,7 @@ New to Broadsea, this profile launches a degauss geocoding instance with a simpl
 
 http://localhost:5150/geocode?address=URLencodedAddress
 
-NOTE: this builds from github and is a very long build ...
+NOTE: this builds from github and is a long build ...
 
 ### Evidence Dissemination
 
